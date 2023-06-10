@@ -10,6 +10,9 @@
 
 fAllParams is a powerful tool to extract all parameters from given URLs. It's also support `json` and `xml` content type.
 
+### Note
+- This tool uses Firefox to send headless requests
+
 ## Requirements
   - Python3
   - Firefox browser
