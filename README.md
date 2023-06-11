@@ -32,6 +32,8 @@ fAllParams is a powerful tool to extract all parameters from given URLs. It's al
 - `-t` or `--thread` : Specify threads - default: `1` - e.g. `-t/--thread 2`
 - `-s` or `--silent` : Run the script silently and do not display any output
 - `-o` or `--output` : Write output to a file
+- `-ru` or `--random_useragent` : Random User-Agent
+- `-x` or `--exclude` : Exclude content-type - e.g. `-x/--exclude json,xml`
 - `-nl` or `--no_logging` : Running the tool without saving logs, logs are saved by default
 
 ## Usage
@@ -64,6 +66,16 @@ Write output to a file
 Running the tool without saving logs, logs are saved by default
 ```
 ./fAllParams.py -d domain.tld -nl
+```
+
+Running the tool with random User-Agent
+```
+./fAllParams.py -d domain.tld -ru
+```
+
+Exclude content-types:
+```
+./fAllParams.py -d domain.tld -x json,xml
 ```
 
 You can also pipe your domain(s) to tools
