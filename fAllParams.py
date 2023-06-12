@@ -13,6 +13,8 @@ import xml.etree.ElementTree as ET
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as firefox_option
 from selenium.webdriver.chrome.options import Options as chrome_option
+from selenium.webdriver.chrome.service import Service as chrome_service
+from selenium.webdriver.firefox.service import Service as firefox_service
 from random import choice
 
 # Arguments
@@ -25,6 +27,7 @@ parser.add_argument('-x', '--exclude', type=str, default='', help="Exclude conte
 parser.add_argument('-o', '--output', type=str, default='', help="Output <string> - e.g. output.txt")
 parser.add_argument('-t', '--thread', type=int, default='1', help="Thread <int> - default: 1")
 parser.add_argument('-hl', '--headless', type=str, default='firefox', help="Headless driver (default: firefox driver) - e.g. -hl/--headless chrome")
+parser.add_argument('-bp', '--browser_path', type=str, default='', help="Full path to the browser driver to use. By default, this tool will search for Firefox - e.g. -hl/--headless chrome -bp/--browser_path /path/to/chromedriver")
 parser.add_argument('-nl', '--no_logging', help="Running the tool without saving logs, logs are saved by default", action="store_true")
 parser.add_argument('-ru', '--random_useragent', help="Random User-Agent", action="store_true")
 parser.add_argument('-h', '--help', action='store_true', help='display help message')
@@ -161,18 +164,39 @@ def crawling(url):
         if not args.no_logging:
             logger.info("Running crawler")
         
+        # headless request
         if args.headless == "firefox":
-            # headless request
-            options = firefox_option()
-            options.add_argument('--headless')
-            options.add_argument('--no-sandbox')
-            driver = webdriver.Firefox(options=options)
+            if args.browser_path:
+                service = firefox_service(executable_path=args.browser_path)
+                options = firefox_option()
+                options.add_argument('--headless')
+                options.add_argument('--disable-extensions')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                driver = webdriver.Firefox(options=options, service=service)
+            else:
+                options = firefox_option()
+                options.add_argument('--headless')
+                options.add_argument('--disable-extensions')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                driver = webdriver.Firefox(options=options)
         else: 
-            # headless request
-            options = chrome_option()
-            options.add_argument('--headless')
-            options.add_argument('--no-sandbox')
-            driver = webdriver.Chrome(options=options)
+            if args.browser_path:
+                service = chrome_service(executable_path=args.browser_path)
+                options = chrome_option()
+                options.add_argument('--headless')
+                options.add_argument('--disable-extensions')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                driver = webdriver.Chrome(options=options, service=service)
+            else:
+                options = chrome_option()
+                options.add_argument('--headless')
+                options.add_argument('--disable-extensions')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                driver = webdriver.Chrome(options=options)
 
         session = Session()
         if args.random_useragent:

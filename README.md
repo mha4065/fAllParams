@@ -35,6 +35,7 @@ fAllParams is a powerful tool to extract all parameters from given URLs. It's al
 - `-o` or `--output` : Write output to a file
 - `-t` or `--thread` : Specify threads - default: `1` - e.g. `-t/--thread 2`
 - `-hl` or `--headless` : Headless driver (default: firefox driver) - e.g. `-hl/--headless chrome`
+- `-bp` or `--browser_path` : Full path to the browser driver to use. By default, this tool will search for Firefox - `e.g. -hl/--headless chrome -bp/--browser_path /path/to/chromedriver`
 - `-nl` or `--no_logging` : Running the tool without saving logs, logs are saved by default
 - `-ru` or `--random_useragent` : Random User-Agent
 
@@ -89,6 +90,11 @@ Exclude content-types:
 Specify the headless driver:
 ```
 ./fAllParams.py -d domain.tld -hl chrome
+```
+
+Full path to the browser driver to use:
+```
+./fAllParams.py -d domain.tld -hl chrome -bp /path/to/chromedriver
 ```
 
 You can also pipe your domain(s) to tools
