@@ -1,6 +1,6 @@
-from re import sub,findall,DOTALL,search,compile,match
+from re import findall,DOTALL,search
 from urllib.parse import urlparse, parse_qs
-from tld import get_tld
+from tldextract import extract as tld_extract
 from bs4 import BeautifulSoup
 from requests import get as requests_get
 import json
@@ -39,7 +39,7 @@ def js_regex(response, logger, args):
 
 def script_src(soup, logger, args, url):
     js_src_params = []
-    res = get_tld(url, as_object=True).domain
+    res = tld_extract(url).domain
     for script in soup.select('script[src]'):
         try:
             src = script['src']

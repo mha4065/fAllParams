@@ -1,6 +1,6 @@
 from .html_function import html_crawling
 from bs4 import BeautifulSoup
-from re import findall, DOTALL, search, compile, match
+from re import findall, DOTALL, search
 from urllib.parse import urlparse, parse_qs
 import json
 

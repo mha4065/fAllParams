@@ -21,7 +21,8 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
 
 ## Installation
   1. `git clone https://github.com/mha4065/fAllParams.git`
-  2. `chmod +x fAllParams.py`
+  2. `pip3 install -r requirements.txt`
+  3. `chmod +x fAllParams.py`
   
 ### Note
 - You can also download the binary file of the tool from the releases and move it to `/usr/local/bin/` path
@@ -59,6 +60,10 @@ Extract the parameters from the `BurpSuite` site map (to use this feature, extra
 ```
 ./fAllParams.py -f sitemap.txt
 ```
+
+### Note
+- You can download this extension from the following URL:
+- `https://github.com/PortSwigger/site-map-extractor`
 
 Specify threads
 ```

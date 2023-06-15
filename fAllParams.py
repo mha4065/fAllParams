@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os,sys,certifi
 from bs4 import BeautifulSoup
 from argparse import ArgumentParser
 from threading import Thread
@@ -50,6 +51,10 @@ if not args.silent:
 
 if args.help:
     parser.print_help()
+
+
+os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), certifi.where())
+
 
 # Crawling function
 def crawling(url):

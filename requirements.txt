@@ -17,3 +17,6 @@ trio
 trio-websocket
 urllib3
 wsproto
+tldextract
+python-environ
+certifi
