@@ -8,14 +8,16 @@
   <a href="#license">license</a>
 </p>
 
-fAllParams is a powerful tool to extract all parameters from given URLs. It's also support `json` and `xml` content type. This tool has the ability to extract the parameters from the BurpSuite response (To use this feature, save the response of the desired URL in a file and then give it as input to the tool).
+fAllParams is a powerful tool for extracting all parameters from given URLs.
 
 ### Note
 - This tool has the ability to send headless requests with Firefox or Chrome drivers
+- This tool also supports `json` and `xml` content types. 
+- This tool has the ability to extract parameters from the `BurpSuite` site map (to use this feature, extract the site map generated for the desired domain in a `txt` file using the `Burp Suite Site Map Extractor` extension, and then as input to the tool by give `-f`)
 
 ## Requirements
-  - Python3
-  - Firefox browser or Chrome browser
+- Python3
+- Firefox or Chrome browser or Chromium driver only
 
 ## Installation
   1. `git clone https://github.com/mha4065/fAllParams.git`
@@ -27,82 +29,78 @@ fAllParams is a powerful tool to extract all parameters from given URLs. It's al
 
 
 ### Tool Options
-- `-d` or `--domain` : Provide an URL to get params. (To single URL check) - e.g. `-d/--domain domain.tld`
-- `-l` or `--list` : Provide a file to get params. (To multiple URL check) - e.g. `-l/--list domains.txt`
-- `-f` or `--file` : HTTP request response file - e.g. `-f/--file response.txt`
+- `-u` or `--url` : Single URL - e.g. `-u/--url domain.tld/path1/path2/path3`
+- `-l` or `--list` : URL list file. (To multiple URL check) - e.g. `-l/--list urls.txt`
+- `-f` or `--file` : BurpSuite site map txt file - e.g. `-f/--file sitemap.txt`
 - `-s` or `--silent` : Run the tool in silent mode
 - `-x` or `--exclude` : Exclude content-type - e.g. `-x/--exclude json,xml`
 - `-o` or `--output` : Write output to a file
-- `-t` or `--thread` : Specify threads - default: `1` - e.g. `-t/--thread 2`
-- `-hl` or `--headless` : Headless driver (default: firefox driver) - e.g. `-hl/--headless chrome`
-- `-bp` or `--browser_path` : Full path to the browser driver to use. By default, this tool will search for Firefox - `e.g. -hl/--headless chrome -bp/--browser_path /path/to/chromedriver`
+- `-t` or `--thread` : Specify threads - default: `2` - e.g. `-t/--thread 2`
+- `-hl` or `--headless` : Send request in headless mode - e.g. `-hl/--headless chrome`
+- `-dp` or `--driver_path` : Full path to the browser driver to use - `e.g. -hl/--headless chrome -dp/--driver_path /path/to/chromedriver`
 - `-nl` or `--no_logging` : Running the tool without saving logs, logs are saved by default
 - `-ru` or `--random_useragent` : Random User-Agent
+- `-h` or `--help` : Display help message
 
 
 ## Usage
 
-Extract the parameters from single domain
+Extract the parameters from single URL
 ```
-./fAllParams.py -d domain.tld
-```
-
-Extract the parameters from a list of domains
-```
-./fAllParams.py -l domains.txt
+./fAllParams.py -u domain.tld/path1/path2/path3
 ```
 
-Extract the parameters from the `BurpSuite` response file
+Extract the parameters from a list of URL
 ```
-./fAllParams.py -f response.txt
+./fAllParams.py -l urls.txt
+```
+
+Extract the parameters from the `BurpSuite` site map (to use this feature, extract the site map generated for the desired domain in a `txt` file using the `Burp Suite Site Map Extractor` extension, and then as input to the tool by give `-f`)
+```
+./fAllParams.py -f sitemap.txt
 ```
 
 Specify threads
 ```
-./fAllParams.py -d domain.tld -t 5
+./fAllParams.py -u domain.tld/path1/path2/path3 -t 5
 ```
 
 Run the tool in silent mode
 ```
-./fAllParams.py -d domain.tld -s
+./fAllParams.py -u domain.tld/path1/path2/path3 -s
 ```
 
 Write output to a file
 ```
-./fAllParams.py -d domain.tld -o output.txt
+./fAllParams.py -u domain.tld/path1/path2/path3 -o output.txt
 ```
 
 Run the tool without saving logs, logs are saved by default
 ```
-./fAllParams.py -d domain.tld -nl
+./fAllParams.py -u domain.tld/path1/path2/path3 -nl
 ```
 
 Run the tool with random User-Agent
 ```
-./fAllParams.py -d domain.tld -ru
+./fAllParams.py -u domain.tld/path1/path2/path3 -ru
 ```
 
 Exclude content-types:
 ```
-./fAllParams.py -d domain.tld -x json,xml
+./fAllParams.py -u domain.tld/path1/path2/path3 -x json,xml
 ```
 
-Specify the headless driver:
+Send request in headless mode:
 ```
-./fAllParams.py -d domain.tld -hl chrome
-```
-
-Full path to the browser driver to use:
-```
-./fAllParams.py -d domain.tld -hl chrome -bp /path/to/chromedriver
+./fAllParams.py -u domain.tld/path1/path2/path3 -hl chrome -dp /path/to/chromedriver
 ```
 
-You can also pipe your domain(s) to tools
+You can also pipe your URL(s) to tools
 ```
-echo domain.tld | fAllParams
+echo domain.tld/path1/path2/path3 | fAllParams
 ```
 ```
-cat domains.txt | fAllParams
+cat urls.txt | fAllParams
 ```
 
 ## License

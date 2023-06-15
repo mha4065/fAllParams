@@ -1,0 +1,13 @@
+def banner(colors):
+    print()                
+    print()
+    print("  __   _    _ _ ____                               ")
+    print(" / _| / \  | | |  _ \ __ _ _ __ __ _ _ __ ___  ___ ")
+    print("| |_ / _ \ | | | |_) / _` | '__/ _` | '_ ` _ \/ __|")
+    print("|  _/ ___ \| | |  __/ (_| | | | (_| | | | | | \__ \\")
+    print("|_|/_/   \_\_|_|_|   \__,_|_|  \__,_|_| |_| |_|\___/")
+    print()
+    print(colors.CYAN + "                            Developed by mha4065    " + colors.NOCOLOR)
+    print(colors.YELLOW + "                                         mha4065.com" + colors.NOCOLOR)
+    print()
+    print()
