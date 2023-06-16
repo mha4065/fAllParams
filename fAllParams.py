@@ -26,6 +26,8 @@ parser.add_argument('-hl', '--headless', type=str, default='', help="Send reques
 parser.add_argument('-dp', '--driver_path', type=str, default='', help="Full path to the browser driver to use - e.g. -hl/--headless chrome -dp/--driver_path /path/to/chromedriver")
 parser.add_argument('-nl', '--no_logging', help="Running the tool without saving logs, logs are saved by default", action="store_true")
 parser.add_argument('-ru', '--random_useragent', help="Random User-Agent", action="store_true")
+parser.add_argument('-js', '--javascript', help="Sending request and crawling the response of the entire site's JavaScript files", action="store_true")
+parser.add_argument('-aa', '--all_attributes', help="Extracting all attributes of HTML tags. (not recommended)", action="store_true")
 parser.add_argument('-h', '--help', action='store_true', help='Display help message')
 
 args = parser.parse_args()
@@ -51,6 +53,7 @@ if not args.silent:
 
 if args.help:
     parser.print_help()
+    exit()
 
 
 os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), certifi.where())
@@ -86,7 +89,7 @@ def crawling(url):
 
         # Output
         if args.output == '':
-            if not args.silent == '':
+            if not args.silent == '' and args.list != '':
                 print()
                 print()
                 print(url)
@@ -95,7 +98,7 @@ def crawling(url):
             for param in params:
                 print(param)
         else:
-            if not args.silent == '':
+            if not args.silent == '' and args.list != '':
                 print()
                 print()
                 print(url)

@@ -23,6 +23,7 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
   1. `git clone https://github.com/mha4065/fAllParams.git`
   2. `pip3 install -r requirements.txt`
   3. `chmod +x fAllParams.py`
+  4. `./fAllParams.py -h`
   
 ### Note
 - You can also download the binary file of the tool from the releases and move it to `/usr/local/bin/` path
@@ -41,6 +42,8 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
 - `-dp` or `--driver_path` : Full path to the browser driver to use - `e.g. -hl/--headless chrome -dp/--driver_path /path/to/chromedriver`
 - `-nl` or `--no_logging` : Running the tool without saving logs, logs are saved by default
 - `-ru` or `--random_useragent` : Random User-Agent
+- `-js` or `--javascript` : Sending request and crawling the response of the entire site's JavaScript files
+- `-aa` or `--all_attributes` : Extracting all attributes of HTML tags. (not recommended)
 - `-h` or `--help` : Display help message
 
 
@@ -98,6 +101,16 @@ Exclude content-types:
 Send request in headless mode:
 ```
 ./fAllParams.py -u domain.tld/path1/path2/path3 -hl chrome -dp /path/to/chromedriver
+```
+
+Sending request and crawling the response of the entire site's JavaScript files:
+```
+./fAllParams.py -u domain.tld/path1/path2/path3 -js
+```
+
+Extracting all attributes of HTML tags. (not recommended):
+```
+./fAllParams.py -u domain.tld/path1/path2/path3 -aa
 ```
 
 You can also pipe your URL(s) to tools

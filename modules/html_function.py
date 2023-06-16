@@ -20,14 +20,29 @@ def js_regex(response, logger, args):
         for match in matches:
             js_params.append(match)
 
-        matches = findall(r"(\w+)\s*=", response)
-        for match in matches:
-            js_params.append(match)
+        # matches = findall(r"(\w+)\s*=", response)
+        # for match in matches:
+        #     js_params.append(match)
 
         matches = findall(r'[{,]\s*([A-Za-z0-9_]+)\s*:', response)
         if matches:
             for match in matches:
                 js_params.append(match)
+
+        scripts = findall(r"<script\b[^>]*>(.*?)</script>", response, DOTALL)
+        for script in scripts:
+            if not "text/template" in script:
+                objects = findall(r'\{.*?\}', script)
+                if len(objects) > 1:
+                    obj_keys1 = findall(r'[,|{]\s*"([^"]*)"\s*:', str(objects))
+                    for obj in obj_keys1:
+                        js_params.append(obj)
+                    obj_keys2 = findall(r'[,{]\\\\"?(.*?)"?\s*[:\\\\]', str(objects))
+                    for obj in obj_keys2:
+                        js_params.append(obj)
+                    obj_keys3 = findall(r'[,{]\\\\"(.*?)\\\\":', str(objects))
+                    for obj in obj_keys3:
+                        js_params.append(obj)
 
         js_params = list(set(js_params))
         return js_params    
@@ -137,17 +152,34 @@ def get_js_objects(contents, logger, args):
 
 def html_crawling(contents, url, logger, args):
     soup = BeautifulSoup(contents, "html.parser")
+    # Exclude tags from response
+    exclude_tags = ['meta', 'html', 'head']
     
-    tags = [tag.name for tag in soup.find_all()]
+    tags = []
+    for tag in soup.find_all():
+        if tag.name not in exclude_tags:
+            tags.append(tag.name)
+        else:
+            pass
+
     params = []
     for tag in set(tags):
         elements = soup.find_all(tag)
         for element in elements:
             try:
-                if element.has_attr("id"):
-                    params.append(element['id'])
-                if element.has_attr("name"):
-                    params.append(element['name'])
+                if args.all_attributes:
+                    for value in element.attrs.values():
+                        if value:
+                            if isinstance(value, list):
+                                for val in value:
+                                    params.append(val)
+                            else:
+                                params.append(value)
+                else:
+                    if element.has_attr("id"):
+                        params.append(element['id'])
+                    if element.has_attr("name"):
+                        params.append(element['name'])
                 if element.has_attr("href"):
                     if '?' in element['href']:
                         param = parse_qs(urlparse(element['href']).query)
@@ -163,13 +195,16 @@ def html_crawling(contents, url, logger, args):
     # Javascript section
     js_src_params = []
     js_params = js_regex(contents, logger, args)
-    js_src_params = script_src(soup, logger, args, url)
+    if args.javascript:
+        js_src_params = script_src(soup, logger, args, url)
+
     js_obj = get_js_objects(contents, logger, args)
             
     merged_params = []
     merged_params.extend(params)
     merged_params.extend(js_params)
-    merged_params.extend(js_src_params)
+    if args.javascript:
+        merged_params.extend(js_src_params)
     merged_params.extend(js_obj)
 
     merged_params = list(set(merged_params))
