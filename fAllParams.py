@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os,sys,certifi
+import os,sys,certifi,warnings
 from bs4 import BeautifulSoup
 from argparse import ArgumentParser
 from threading import Thread
@@ -12,6 +12,8 @@ from modules.json_function import *
 from modules.xml_function import *
 from modules.sitemap_params import *
 from modules.banner import *
+
+warnings.filterwarnings("ignore")
 
 # Arguments
 parser = ArgumentParser(add_help=False)
@@ -96,7 +98,8 @@ def crawling(url):
                 print('==========================================================')
                 
             for param in params:
-                print(param)
+                if param:
+                    print(param)
         else:
             if not args.silent == '' and args.list != '':
                 print()
@@ -105,9 +108,10 @@ def crawling(url):
                 print('==========================================================')
 
             for param in params:
-                print(param)
-                with open(args.output, 'a') as f:
-                    f.write(param+'\n')
+                if param:
+                    print(param)
+                    with open(args.output, 'a') as f:
+                        f.write(param+'\n')
     except Exception as e:
         if not args.no_logging:
             logger.error(e)
@@ -175,14 +179,17 @@ elif args.file != '':
         params = sitemap(args, logger)
     else:
         params = sitemap(args)
+        
     if args.output == '':
         for param in params:
-            print(param)
+            if param:
+                print(param)
     else:
         for param in params:
-            print(param)
-            with open(args.output, 'a') as f:
-                f.write(param+'\n')
+            if param:
+                print(param)
+                with open(args.output, 'a') as f:
+                    f.write(param+'\n')
 
 # Get input from pipeline stdin
 else:

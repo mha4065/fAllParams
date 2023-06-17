@@ -59,10 +59,10 @@ def headless_function(args, url):
     session = Session()
     if args.random_useragent:
         headers = {'User-Agent': choice(user_agents)}
-        response = session.get(url, headers=headers)
+        response = session.get(url, headers=headers, verify=False)
     else:
         headers = {'User-Agent': 'User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0'}
-        response = session.get(url, headers=headers)
+        response = session.get(url, headers=headers, verify=False)
     driver.quit()
 
     return response
