@@ -36,6 +36,7 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
 - `-f` or `--file` : BurpSuite site map txt file - e.g. `-f/--file sitemap.txt`
 - `-s` or `--silent` : Run the tool in silent mode
 - `-x` or `--exclude` : Exclude content-type - e.g. `-x/--exclude json,xml`
+- `-H` or `--head` : Specify headers - e.g. `-H/--head "Cookie: yourcookie"`
 - `-o` or `--output` : Write output to a file
 - `-t` or `--thread` : Specify threads - default: `2` - e.g. `-t/--thread 2`
 - `-hl` or `--headless` : Send request in headless mode - e.g. `-hl/--headless chrome`
@@ -96,6 +97,11 @@ Run the tool with random User-Agent
 Exclude content-types:
 ```
 ./fAllParams.py -u domain.tld/path1/path2/path3 -x json,xml
+```
+
+Specify headers:
+```
+./fAllParams.py -u domain.tld/path1/path2/path3 -H "Cookie: yourcookie" -H "X-Forwarded-For: 127.0.0.1"
 ```
 
 Send request in headless mode:
