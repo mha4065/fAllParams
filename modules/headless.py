@@ -56,13 +56,19 @@ def headless_function(args, url):
             options.add_argument('--disable-dev-shm-usage')
             driver = webdriver.Chrome(options=options)
 
+    config_options = {}
+    if args.head:
+        for option in args.head:
+            key, value = option.split(':')
+            if args.random_useragent:
+                config_options['User-Agent'] = choice(user_agents)
+            else:
+                config_options['User-Agent'] = "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
+            config_options[key] = value
+
+
     session = Session()
-    if args.random_useragent:
-        headers = {'User-Agent': choice(user_agents)}
-        response = session.get(url, headers=headers, verify=False)
-    else:
-        headers = {'User-Agent': 'User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0'}
-        response = session.get(url, headers=headers, verify=False)
+    response = session.get(url, headers=config_options, verify=False)
     driver.quit()
 
     return response

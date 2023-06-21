@@ -22,6 +22,7 @@ parser.add_argument('-l', '--list', nargs='?', type=str, default='', help="Domai
 parser.add_argument('-f', '--file', nargs='?', type=str, default='', help="HTTP request response file - e.g. -f/--file response.txt")
 parser.add_argument('-s', '--silent', help="Silent mode", action="store_true")
 parser.add_argument('-x', '--exclude', type=str, default='', help="Exclude content-type - e.g. -x/--exclude json,xml")
+parser.add_argument('-H', '--head', action='append', help='Enter your headers - e.g. -H/--head "Cookie: yourcookie"')
 parser.add_argument('-o', '--output', type=str, default='', help="Output <string> - e.g. output.txt")
 parser.add_argument('-t', '--thread', type=int, default='2', help="Thread <int> - default: 2")
 parser.add_argument('-hl', '--headless', type=str, default='', help="Send request in headless mode - e.g. -hl/--headless chrome")

@@ -47,7 +47,7 @@ def js_regex(response, logger, args):
 def post_get_req_params(contents, logger, args):
     params = []
     try:
-        requests = findall(r'----- REQUEST(.*?)HTTP/', contents, DOTALL)
+        requests = findall(r'[GET|POST](.*?)HTTP\/', contents, DOTALL)
         for request in requests:
             parameters = findall(r'\b\w+=', request)
             for param in parameters:

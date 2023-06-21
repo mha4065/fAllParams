@@ -18,11 +18,16 @@ user_agents = ['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH
 
 
 def request_function(args, url):
-    if args.random_useragent:
-        headers = {'User-Agent': choice(user_agents)}
-        response = get(url, headers=headers, verify=False)
-    else:
-        headers = {'User-Agent': 'User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0'}
-        response = get(url, headers=headers, verify=False)
+    config_options = {}
+    if args.head:
+        for option in args.head:
+            key, value = option.split(':')
+            if args.random_useragent:
+                config_options['User-Agent'] = choice(user_agents)
+            else:
+                config_options['User-Agent'] = "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
+            config_options[key] = value
+
+    response = get(url, headers=config_options, verify=False)
 
     return response
