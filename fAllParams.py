@@ -62,6 +62,8 @@ if args.help:
 os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), certifi.where())
 
 
+results = []
+
 # Crawling function
 def crawling(url):
     try:
@@ -89,30 +91,11 @@ def crawling(url):
         else:
             params = html_crawling(response.text, url, logger, args)
             
-
-        # Output
-        if args.output == '':
-            if not args.silent == '' and args.list != '':
-                print()
-                print()
-                print(url)
-                print('==========================================================')
-                
+        if len(params) > 0:
+            
             for param in params:
-                if param:
-                    print(param)
-        else:
-            if not args.silent == '' and args.list != '':
-                print()
-                print()
-                print(url)
-                print('==========================================================')
+                results.append(param)
 
-            for param in params:
-                if param:
-                    print(param)
-                    with open(args.output, 'a') as f:
-                        f.write(param+'\n')
     except Exception as e:
         if not args.no_logging:
             logger.error(e)
@@ -132,6 +115,7 @@ def thread(urls):
 
     threads = []
 
+    
     for chunk in chunks:
         thread = Thread(target=lambda urls: [crawling(url) for url in urls], args=(chunk,))
         thread.start()
@@ -154,6 +138,19 @@ if args.list != '':
             complete_urls.append(url)
     try:
         thread(complete_urls)
+        if len(results) > 0:
+            results = list(set(results))
+            # Output
+            if args.output == '':
+                for res in results:
+                    if res:
+                        print(res)
+            else:
+                for res in results:
+                    if res:
+                        print(res)
+                        with open(args.output, 'a') as f:
+                            f.write(res+'\n')
     except Exception as e:
         if not args.no_logging:
             logger.error(e)
@@ -170,6 +167,20 @@ elif args.url != '':
 
     try:
         thread(complete_urls)
+        if len(results) > 0:
+            results = list(set(results))
+
+            # Output
+            if args.output == '':
+                for res in results:
+                    if res:
+                        print(res)
+            else:
+                for res in results:
+                    if res:
+                        print(res)
+                        with open(args.output, 'a') as f:
+                            f.write(res+'\n')
     except Exception as e:
         if not args.no_logging:
             logger.error(e)
@@ -211,6 +222,20 @@ else:
                     complete_urls.append(url)
 
                 thread(complete_urls)
+                if len(results) > 0:
+                    results = list(set(results))
+
+                    # Output
+                    if args.output == '':
+                        for res in results:
+                            if res:
+                                print(res)
+                    else:
+                        for res in results:
+                            if res:
+                                print(res)
+                                with open(args.output, 'a') as f:
+                                    f.write(res+'\n')
             except Exception as e:
                 if not args.no_logging:
                     logger.error(e)
@@ -225,6 +250,20 @@ else:
                     complete_urls.append(url)
             try:
                 thread(complete_urls)
+                if len(results) > 0:
+                    results = list(set(results))
+
+                    # Output
+                    if args.output == '':
+                        for res in results:
+                            if res:
+                                print(res)
+                    else:
+                        for res in results:
+                            if res:
+                                print(res)
+                                with open(args.output, 'a') as f:
+                                    f.write(res+'\n')
             except Exception as e:
                 if not args.no_logging:
                     logger.error(e)

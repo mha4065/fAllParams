@@ -28,15 +28,11 @@ def headless_function(args, url):
             service = firefox_service(executable_path=args.driver_path)
             options = firefox_option()
             options.add_argument('--headless')
-            options.add_argument('--disable-extensions')
-            options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             driver = webdriver.Firefox(options=options, service=service)
         else:
             options = firefox_option()
             options.add_argument('--headless')
-            options.add_argument('--disable-extensions')
-            options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             driver = webdriver.Firefox(options=options)
     else: 
@@ -44,15 +40,11 @@ def headless_function(args, url):
             service = chrome_service(executable_path=args.driver_path)
             options = chrome_option()
             options.add_argument('--headless')
-            options.add_argument('--disable-extensions')
-            options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             driver = webdriver.Chrome(options=options, service=service)
         else:
             options = chrome_option()
             options.add_argument('--headless')
-            options.add_argument('--disable-extensions')
-            options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             driver = webdriver.Chrome(options=options)
 
