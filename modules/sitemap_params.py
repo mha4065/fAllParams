@@ -1,4 +1,3 @@
-from .html_function import html_crawling
 from bs4 import BeautifulSoup
 from re import findall, DOTALL
 from urllib.parse import urlparse, parse_qs
@@ -26,7 +25,7 @@ def get_keys_from_text(text):
             pass
     return keys
 
-def js_regex(response, logger, args):
+def js_regex(response, args, logger=None):
     js_params = []
     try:
         matches = findall(r"(var|let|const)\s+(\w+)", response)
@@ -44,7 +43,7 @@ def js_regex(response, logger, args):
             logger.error(e)
         pass
 
-def post_get_req_params(contents, logger, args):
+def post_get_req_params(contents, args, logger=None):
     params = []
     try:
         requests = findall(r'[GET|POST](.*?)HTTP\/', contents, DOTALL)
@@ -60,7 +59,7 @@ def post_get_req_params(contents, logger, args):
     params = list(set(params))
     return params
 
-def post_req_params(contents, exclude, logger, args):
+def post_req_params(contents, exclude, args, logger=None):
     requests = findall("----- REQUEST\n(.*?)\n----- RESPONSE", contents, DOTALL)
     params = []
     for req in requests:
@@ -85,7 +84,7 @@ def post_req_params(contents, exclude, logger, args):
     params = list(set(params))
     return params
 
-def xml_resp_req_body(contents, exclude, logger, args):
+def xml_resp_req_body(contents, exclude, args, logger=None):
     response_body = findall("<\?xml.*?\?>[\s\S]*?(?=----- REQUEST)", contents, DOTALL)
     params = []
     illegal = ['!--', 'svg', '!DOCTYPE']
@@ -118,7 +117,7 @@ def xml_resp_req_body(contents, exclude, logger, args):
     params = list(set(params))
     return params
 
-def sitemap(args, logger):
+def sitemap(args, logger=None):
     if args.exclude:
         exclude = args.exclude.replace(' ', '').split(',')
     else:
@@ -173,10 +172,10 @@ def sitemap(args, logger):
                         logger.error(e)
                     pass
 
-        js_params = js_regex(contents, logger, args)
-        pg_params = post_get_req_params(contents, logger, args)
-        post_params = post_req_params(contents, exclude, logger, args)
-        xml = xml_resp_req_body(contents, exclude, logger, args)
+        js_params = js_regex(contents, args, logger=None)
+        pg_params = post_get_req_params(contents, args, logger=None)
+        post_params = post_req_params(contents, exclude, args, logger=None)
+        xml = xml_resp_req_body(contents, exclude, args, logger=None)
 
         merged_params = []
         merged_params.extend(js_params)

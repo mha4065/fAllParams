@@ -20,3 +20,4 @@ wsproto
 tldextract
 python-environ
 certifi
+selenium-wire

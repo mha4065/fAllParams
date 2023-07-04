@@ -1,4 +1,4 @@
-from re import findall,DOTALL,search
+from re import findall,DOTALL
 from urllib.parse import urlparse, parse_qs
 from tldextract import extract as tld_extract
 from bs4 import BeautifulSoup
@@ -28,7 +28,7 @@ def get_keys_from_text(text):
             pass
     return keys
 
-def js_regex(response, logger, args):
+def js_regex(response, args, logger=None):
     js_params = []
     try:
         matches = findall(r"(var|let|const)\s+(\w+)", response)
@@ -47,7 +47,7 @@ def js_regex(response, logger, args):
         pass
 
 
-def script_src(soup, logger, args, url):
+def script_src(soup, args, url, logger=None):
     js_src_params = []
     res = tld_extract(url).domain
     for script in soup.select('script[src]'):
@@ -59,7 +59,10 @@ def script_src(soup, logger, args, url):
                 else:
                     js_url = url + script['src']
                 resp = requests_get(js_url)
-                js_src = js_regex(resp.text, logger, args)
+                if args.headless:
+                    js_src = js_regex(resp, args, logger=None)
+                else:
+                    js_src = js_regex(resp.text, args, logger=None)
                 for jsparam in js_src:
                     js_src_params.append(jsparam)
             elif script['src'].startswith("//"):
@@ -68,12 +71,18 @@ def script_src(soup, logger, args, url):
                 else:
                     js_url = url + script['src'].replace('//', '/')
                 resp = requests_get(js_url)
-                js_src = js_regex(resp.text, logger, args)
+                if args.headless:
+                    js_src = js_regex(resp, args, logger=None)
+                else:
+                    js_src = js_regex(resp.text, args, logger=None)
                 for jsparam in js_src:
                     js_src_params.append(jsparam)
             elif res in script['src']:
                 resp = requests_get(script['src'])
-                js_src = js_regex(resp.text, logger, args)
+                if args.headless:
+                    js_src = js_regex(resp, args, logger=None)
+                else:
+                    js_src = js_regex(resp.text, args, logger=None)
                 for jsparam in js_src:
                     js_src_params.append(jsparam)
             else:
@@ -85,7 +94,7 @@ def script_src(soup, logger, args, url):
 
     return js_src_params
 
-def html_crawling(contents, url, logger, args):
+def html_crawling(contents, url, args, logger=None):
     soup = BeautifulSoup(contents, "html.parser")
     # Exclude tags from response
     exclude_tags = ['meta', 'html', 'head']
@@ -129,9 +138,9 @@ def html_crawling(contents, url, logger, args):
 
     # Javascript section
     js_src_params = []
-    js_params = js_regex(contents, logger, args)
+    js_params = js_regex(contents, args, logger=None)
     if args.javascript:
-        js_src_params = script_src(soup, logger, args, url)
+        js_src_params = script_src(soup, args, url, logger=None)
             
     merged_params = []
     merged_params.extend(params)

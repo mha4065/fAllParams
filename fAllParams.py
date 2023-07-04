@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os,sys,certifi,warnings
-from bs4 import BeautifulSoup
 from argparse import ArgumentParser
 from threading import Thread
 from sys import stdin
@@ -22,13 +21,14 @@ parser.add_argument('-l', '--list', nargs='?', type=str, default='', help="Domai
 parser.add_argument('-f', '--file', nargs='?', type=str, default='', help="HTTP request response file - e.g. -f/--file response.txt")
 parser.add_argument('-s', '--silent', help="Silent mode", action="store_true")
 parser.add_argument('-x', '--exclude', type=str, default='', help="Exclude content-type - e.g. -x/--exclude json,xml")
-parser.add_argument('-H', '--head', action='append', help='Enter your headers - e.g. -H/--head "Cookie: yourcookie"')
-parser.add_argument('-o', '--output', type=str, default='', help="Output <string> - e.g. output.txt")
+parser.add_argument('-H', '--header', action='append', help='Enter your headers - e.g. -H/--header "Cookie:yourcookie"')
+parser.add_argument('-o', '--output', type=str, default='', help="Output <string> - e.g. -o/--output output.txt")
 parser.add_argument('-t', '--thread', type=int, default='2', help="Thread <int> - default: 2")
 parser.add_argument('-hl', '--headless', type=str, default='', help="Send request in headless mode - e.g. -hl/--headless chrome")
 parser.add_argument('-dp', '--driver_path', type=str, default='', help="Full path to the browser driver to use - e.g. -hl/--headless chrome -dp/--driver_path /path/to/chromedriver")
 parser.add_argument('-nl', '--no_logging', help="Running the tool without saving logs, logs are saved by default", action="store_true")
-parser.add_argument('-ru', '--random_useragent', help="Random User-Agent", action="store_true")
+parser.add_argument('-ua', '--user_agent', type=str, help='Enter your User-Agent - e.g. -ua/--user_agent "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"', default="")
+parser.add_argument('-px', '--proxy', type=str, help='Enter your proxy - e.g. -px/--proxy "http://ip:port"', default="")
 parser.add_argument('-js', '--javascript', help="Sending request and crawling the response of the entire site's JavaScript files", action="store_true")
 parser.add_argument('-aa', '--all_attributes', help="Extracting all attributes of HTML tags. (not recommended)", action="store_true")
 parser.add_argument('-h', '--help', action='store_true', help='Display help message')
@@ -56,11 +56,10 @@ if not args.silent:
 
 if args.help:
     parser.print_help()
-    exit()
+    sys.exit()
 
 
 os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), certifi.where())
-
 
 results = []
 
@@ -69,12 +68,11 @@ def crawling(url):
     try:
         # request functions
         if args.headless:
-            response = headless_function(args, url)
+            response, content_type = headless_function(args, url)
         else:
             response = request_function(args, url)
-
-        content_type = response.headers.get('content-type')
-
+            content_type = response.headers.get('content-type')
+        
         if args.exclude:
             exclude = args.exclude.replace(' ', '').split(',')
         else:
@@ -89,7 +87,10 @@ def crawling(url):
             params = xml_params(response)
         # Crawl HTML
         else:
-            params = html_crawling(response.text, url, logger, args)
+            if args.headless:
+                params = html_crawling(response, url, args, logger=None)
+            else:
+                params = html_crawling(response.text, url, args, logger=None)
             
         if len(params) > 0:
             
@@ -128,80 +129,93 @@ def thread(urls):
 
 # Get a list of URLs
 if args.list != '':
-    urls = [line.strip() for line in open(args.list)]
-    urls = list(set(urls))
-    complete_urls = []
-    for url in urls:
-        if not url.startswith("http://") and not url.startswith("https://"):
-            complete_urls.append("https://{}".format(url))
-        else:
-            complete_urls.append(url)
-    try:
-        thread(complete_urls)
-        if len(results) > 0:
-            results = list(set(results))
-            # Output
-            if args.output == '':
-                for res in results:
-                    if res:
-                        print(res)
+    if args.list and len(args.list) > 0:
+        urls = [line.strip() for line in open(args.list)]
+        urls = list(set(urls))
+        complete_urls = []
+        for url in urls:
+            if not url.startswith("http://") and not url.startswith("https://"):
+                complete_urls.append("https://{}".format(url))
             else:
-                for res in results:
-                    if res:
-                        print(res)
-                        with open(args.output, 'a') as f:
-                            f.write(res+'\n')
-    except Exception as e:
-        if not args.no_logging:
-            logger.error(e)
-        pass
+                complete_urls.append(url)
+        try:
+            thread(complete_urls)
+            if len(results) > 0:
+                results = list(set(results))
+                # Output
+                if args.output == '':
+                    for res in results:
+                        if res:
+                            print(res)
+                else:
+                    for res in results:
+                        if res:
+                            print(res)
+                            with open(args.output, 'a') as f:
+                                f.write(res+'\n')
+        except Exception as e:
+            if not args.no_logging:
+                logger.error(e)
+            pass
+    else:
+        parser.print_help()
+        sys.exit()
 
 # Get single URL
 elif args.url != '':
     url = args.url
     complete_urls = []
-    if not url.startswith("http://") and not url.startswith("https://"):
-        complete_urls.append("https://{}".format(url))
+    if url:
+        if not url.startswith("http://") and not url.startswith("https://"):
+            complete_urls.append("https://{}".format(url))
+        else:
+            complete_urls.append(url)
+
+        try:
+            thread(complete_urls)
+            if len(results) > 0:
+                results = list(set(results))
+
+                # Output
+                if args.output == '':
+                    for res in results:
+                        if res:
+                            print(res)
+                else:
+                    for res in results:
+                        if res:
+                            print(res)
+                            with open(args.output, 'a') as f:
+                                f.write(res+'\n')
+    
+        except Exception as e:
+            if not args.no_logging:
+                logger.error(e)
+            pass
     else:
-        complete_urls.append(url)
-
-    try:
-        thread(complete_urls)
-        if len(results) > 0:
-            results = list(set(results))
-
-            # Output
-            if args.output == '':
-                for res in results:
-                    if res:
-                        print(res)
-            else:
-                for res in results:
-                    if res:
-                        print(res)
-                        with open(args.output, 'a') as f:
-                            f.write(res+'\n')
-    except Exception as e:
-        if not args.no_logging:
-            logger.error(e)
-        pass
+        parser.print_help()
+        sys.exit()
 
 elif args.file != '':
-    if not args.no_logging:
-        params = sitemap(args, logger)
+    if args.file:
+        if not args.no_logging:
+            params = sitemap(args, logger=None)
+        else:
+            params = sitemap(args)
+            
+        if args.output == '':
+            for param in params:
+                if param:
+                    print(param)
+        else:
+            for param in params:
+                if param:
+                    print(param)
+                    with open(args.output, 'a') as f:
+                        f.write(param+'\n')
     else:
-        params = sitemap(args)
-        
-    if args.output == '':
-        for param in params:
-            if param:
-                print(param)
-    else:
-        for param in params:
-            if param:
-                print(param)
-                with open(args.output, 'a') as f:
-                    f.write(param+'\n')
+        parser.print_help()
+        sys.exit()
 
 # Get input from pipeline stdin
 else:
@@ -212,30 +226,34 @@ else:
                 complete_urls = []
 
                 url = input_urls[0]
+                if url:
 
-                if ',' in url:
-                    url = url.split(',')[0]
+                    if ',' in url:
+                        url = url.split(',')[0]
 
-                if not url.startswith("http://") and not url.startswith("https://"):
-                    complete_urls.append("https://{}".format(url))
-                else:
-                    complete_urls.append(url)
-
-                thread(complete_urls)
-                if len(results) > 0:
-                    results = list(set(results))
-
-                    # Output
-                    if args.output == '':
-                        for res in results:
-                            if res:
-                                print(res)
+                    if not url.startswith("http://") and not url.startswith("https://"):
+                        complete_urls.append("https://{}".format(url))
                     else:
-                        for res in results:
-                            if res:
-                                print(res)
-                                with open(args.output, 'a') as f:
-                                    f.write(res+'\n')
+                        complete_urls.append(url)
+
+                    thread(complete_urls)
+                    if len(results) > 0:
+                        results = list(set(results))
+
+                        # Output
+                        if args.output == '':
+                            for res in results:
+                                if res:
+                                    print(res)
+                        else:
+                            for res in results:
+                                if res:
+                                    print(res)
+                                    with open(args.output, 'a') as f:
+                                        f.write(res+'\n')
+                else:
+                    parser.print_help()
+                    sys.exit()
             except Exception as e:
                 if not args.no_logging:
                     logger.error(e)

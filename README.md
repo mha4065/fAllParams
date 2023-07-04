@@ -31,18 +31,19 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
 
 
 ### Tool Options
-- `-u` or `--url` : Single URL - e.g. `-u/--url domain.tld/path1/path2/path3`
-- `-l` or `--list` : URL list file. (To multiple URL check) - e.g. `-l/--list urls.txt`
-- `-f` or `--file` : BurpSuite site map txt file - e.g. `-f/--file sitemap.txt`
+- `-u` or `--url` : Single URL
+- `-l` or `--list` : URL list file. (To multiple URL check)
+- `-f` or `--file` : Enter your BurpSuite site map txt file
 - `-s` or `--silent` : Run the tool in silent mode
-- `-x` or `--exclude` : Exclude content-type - e.g. `-x/--exclude json,xml`
-- `-H` or `--head` : Specify headers - e.g. `-H/--head "Cookie: yourcookie"`
+- `-x` or `--exclude` : Exclude content-type, for example `json` or `xml`
+- `-H` or `--header` : Enter your custom headers
 - `-o` or `--output` : Write output to a file
-- `-t` or `--thread` : Specify threads - default: `2` - e.g. `-t/--thread 2`
-- `-hl` or `--headless` : Send request in headless mode - e.g. `-hl/--headless chrome`
-- `-dp` or `--driver_path` : Full path to the browser driver to use - `e.g. -hl/--headless chrome -dp/--driver_path /path/to/chromedriver`
+- `-t` or `--thread` : Specify threads - default: `2`
+- `-hl` or `--headless` : Send request in headless mode
+- `-dp` or `--driver_path` : Full path to the browser driver to use
 - `-nl` or `--no_logging` : Running the tool without saving logs, logs are saved by default
-- `-ru` or `--random_useragent` : Random User-Agent
+- `-ua` or `--user_agent` : Enter your user-agent. By default, the user-agent is randomly selected
+- `-px` or `--proxy`: Enter your proxy
 - `-js` or `--javascript` : Sending request and crawling the response of the entire site's JavaScript files
 - `-aa` or `--all_attributes` : Extracting all attributes of HTML tags. (not recommended)
 - `-h` or `--help` : Display help message
@@ -89,9 +90,9 @@ Run the tool without saving logs, logs are saved by default
 ./fAllParams.py -u domain.tld/path1/path2/path3 -nl
 ```
 
-Run the tool with random User-Agent
+Run the tool with your User-Agent
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -ru
+./fAllParams.py -u domain.tld/path1/path2/path3 -ua "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
 ```
 
 Exclude content-types:
@@ -112,6 +113,11 @@ Send request in headless mode:
 Sending request and crawling the response of the entire site's JavaScript files:
 ```
 ./fAllParams.py -u domain.tld/path1/path2/path3 -js
+```
+
+HTTP proxy to use
+```
+./fAllParams.py -u domain.tld/path1/path2/path3 -px "http://ip:port"
 ```
 
 Extracting all attributes of HTML tags. (not recommended):
