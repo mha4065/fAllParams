@@ -127,6 +127,14 @@ def thread(urls):
         thread.join()
 
 
+def remove_long_params(lst):
+    new_lst = []
+    for item in lst:
+        if len(item) <= 30:
+            new_lst.append(item)
+    return new_lst
+
+
 # Get a list of URLs
 if args.list != '':
     if args.list and len(args.list) > 0:
@@ -142,6 +150,7 @@ if args.list != '':
             thread(complete_urls)
             if len(results) > 0:
                 results = list(set(results))
+                results = remove_long_params(results)
                 # Output
                 if args.output == '':
                     for res in results:
@@ -175,7 +184,7 @@ elif args.url != '':
             thread(complete_urls)
             if len(results) > 0:
                 results = list(set(results))
-
+                results = remove_long_params(results)
                 # Output
                 if args.output == '':
                     for res in results:
@@ -202,6 +211,9 @@ elif args.file != '':
             params = sitemap(args, logger=None)
         else:
             params = sitemap(args)
+
+        params = list(set(params))
+        params = remove_long_params(params)
             
         if args.output == '':
             for param in params:

@@ -53,7 +53,7 @@ fAllParams is a powerful tool for extracting all parameters from given URLs.
 
 Extract the parameters from single URL
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3
+./fAllParams.py -u "https://domain.tld/path1/path2/path3"
 ```
 
 Extract the parameters from a list of URL
@@ -72,62 +72,62 @@ Extract the parameters from the `BurpSuite` site map (to use this feature, extra
 
 Specify threads
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -t 5
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -t 5
 ```
 
 Run the tool in silent mode
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -s
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -s
 ```
 
 Write output to a file
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -o output.txt
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -o output.txt
 ```
 
 Run the tool without saving logs, logs are saved by default
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -nl
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -nl
 ```
 
 Run the tool with your User-Agent
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -ua "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -ua "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
 ```
 
 Exclude content-types:
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -x json,xml
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -x json,xml
 ```
 
 Specify headers:
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -H "Cookie: yourcookie" -H "X-Forwarded-For: 127.0.0.1"
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -H "Cookie: yourcookie" -H "X-Forwarded-For: 127.0.0.1"
 ```
 
 Send request in headless mode:
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -hl chrome -dp /path/to/chromedriver
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -hl chrome -dp /path/to/chromedriver
 ```
 
 Sending request and crawling the response of the entire site's JavaScript files:
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -js
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -js
 ```
 
 HTTP proxy to use
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -px "http://ip:port"
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -px "http://ip:port"
 ```
 
 Extracting all attributes of HTML tags. (not recommended):
 ```
-./fAllParams.py -u domain.tld/path1/path2/path3 -aa
+./fAllParams.py -u "https://domain.tld/path1/path2/path3" -aa
 ```
 
 You can also pipe your URL(s) to tools
 ```
-echo domain.tld/path1/path2/path3 | fAllParams
+echo "https://domain.tld/path1/path2/path3" | fAllParams
 ```
 ```
 cat urls.txt | fAllParams

@@ -117,6 +117,15 @@ def xml_resp_req_body(contents, exclude, args, logger=None):
     params = list(set(params))
     return params
 
+
+def remove_long_params(lst):
+    new_lst = []
+    for item in lst:
+        if len(item) <= 30:
+            new_lst.append(item)
+    return new_lst
+
+
 def sitemap(args, logger=None):
     if args.exclude:
         exclude = args.exclude.replace(' ', '').split(',')
@@ -182,7 +191,5 @@ def sitemap(args, logger=None):
         merged_params.extend(pg_params)
         merged_params.extend(post_params)
         merged_params.extend(xml)
-
-        merged_params = list(set(merged_params))
 
         return merged_params
